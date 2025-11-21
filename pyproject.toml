@@ -1,0 +1,13 @@
+[project]
+name = "polar-pipeline"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.1.0",
+    "numpy>=2.3.5",
+    "pandas>=2.3.3",
+    "polars>=1.35.2",
+    "prefect>=3.6.3",
+]

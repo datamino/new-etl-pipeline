@@ -1,0 +1,142 @@
+layer1:
+  # Input folder where mc_us_new_combined_YYYYMMDD.csv.gz files exist
+  # input_dir: "D:/CustomerData/LocalUser/MarketCheck/"
+
+  input_dir: "./test_input/"
+
+  # Output folder for Layer-1 parquet dataset
+  # Final path becomes: data/layer1_output/new/YYYYMMDD/part-xxxxx.parquet
+  output_dir: "data/layer1_output/new/"
+
+  # Input file naming pattern
+  filename_pattern: "mc_us_new_combined_{date}.csv.gz"
+
+  # Parquet writing settings
+  parquet_compression: "snappy"
+  chunk_size: 1000000
+
+  # Strict schema for NEW vehicles (MUST MATCH old pipeline)
+  full_columns_new:
+    - vin
+    - heading
+    - more_info
+    - price
+    - msrp
+    - miles
+    - stock_no
+    - neo_listing_confidence
+    - neo_year
+    - neo_make
+    - neo_model
+    - neo_trim
+    - neo_trim_confidence
+    - neo_version
+    - neo_version_confidence
+    - neo_vehicle_type
+    - neo_body_type
+    - neo_body_subtype
+    - neo_drivetrain
+    - neo_powertrain_type
+    - neo_fuel_type
+    - neo_engine
+    - neo_engine_block
+    - neo_engine_size
+    - neo_transmission
+    - neo_doors
+    - neo_seating_capacity
+    - neo_cylinders
+    - neo_city_mpg
+    - neo_highway_mpg
+    - neo_weight
+    - neo_width
+    - neo_height
+    - neo_length
+    - neo_manufacturer_code
+    - neo_package_code
+    - neo_package_description
+    - neo_base_msrp
+    - neo_installed_options_msrp
+    - neo_delivery_charges
+    - neo_combined_msrp
+    - interior_color
+    - base_interior_color
+    - neo_mfg_interior_color
+    - exterior_color
+    - base_exterior_color
+    - neo_mfg_exterior_color
+    - is_certified
+    - is_transfer
+    - taxonomy_vin
+    - model_code
+    - scraped_at
+    - status_date
+    - first_scraped_at
+    - source
+    - seller_name
+    - street
+    - city
+    - state
+    - zip
+    - latitude
+    - longitude
+    - country
+    - neo_country
+    - seller_phone
+    - seller_email
+    - seller_type
+    - listing_type
+    - inventory_type
+    - dealer_type
+    - car_seller_name
+    - car_address
+    - car_street
+    - car_city
+    - car_state
+    - car_zip
+    - car_latitude
+    - car_longitude
+    - seller_comments
+    - options
+    - features
+    - neo_options_packages
+    - neo_installed_options_details
+    - neo_high_value_features
+    - photo_links
+    - photo_url
+    - dom
+    - dom_180
+    - dom_active
+    - currency_indicator
+    - miles_indicator
+    - carfax_1_owner
+    - carfax_clean_title
+    - loan_term
+    - loan_apr
+    - l_down_pay
+    - l_emi
+    - f_down_pay
+    - f_down_pay_per
+    - f_emi
+    - lease_term
+    - in_transit
+    - in_transit_at
+    - in_transit_days
+    - dos_active
+    - mc_category
+    - mc_dealership_group_id
+    - mc_sub_dealership_group_id
+    - mc_dealership_group_name
+    - mc_sub_dealership_group_name
+    - mc_dealer_id
+    - mc_location_id
+    - mc_website_id
+    - mc_rooftop_id
+    - mc_car_location_id
+    - is_searchable
+    - original_msrp
+    - build_specs_msrp
+    - mc_msrp
+    - msrp_label
+    - validated
+    - purge_reason
+    - website_provider
