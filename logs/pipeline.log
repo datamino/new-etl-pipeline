@@ -190,3 +190,222 @@ See https://docs.prefect.io/v3/concepts/server#how-to-guides for more informatio
 2025-11-24 20:44:59 | prefect.flow_runs | INFO | Finished in state Completed()
 2025-11-24 20:44:59 | pipeline | INFO | ETL pipeline CLI execution completed successfully
 2025-11-24 20:44:59 | prefect | INFO | Stopping temporary server on http://127.0.0.1:8585
+2025-11-24 22:46:03 | pipeline | INFO | Starting ETL pipeline CLI entrypoint
+2025-11-24 22:46:03 | pipeline | ERROR | Invalid usage. Expected format: python pipeline.py YYYYMMDD
+2025-11-24 22:46:38 | pipeline | INFO | Starting ETL pipeline CLI entrypoint
+2025-11-24 22:46:38 | pipeline | INFO | Received date argument: 20251124
+2025-11-24 22:46:38 | pipeline | INFO | Formatted execution date: 2025-11-24
+2025-11-24 22:46:38 | pipeline | INFO | Triggering main Prefect ETL pipeline flow
+2025-11-24 22:46:40 | prefect | INFO | Starting temporary server on http://127.0.0.1:8116
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+2025-11-24 22:46:45 | prefect.flow_runs | INFO | Beginning flow run 'rapid-puma' for flow 'Main ETL Pipeline'
+2025-11-24 22:46:45 | flows.main_pipeline | INFO | Main ETL Pipeline Started for date: 2025-11-24
+2025-11-24 22:46:45 | flows.main_pipeline | INFO | ▶ Running Layer 1 – NEW Cars Parquet Preparation
+2025-11-24 22:46:45 | prefect.flow_runs | INFO | Beginning subflow run 'astonishing-toucan' for flow 'Layer 1 – Prepare NEW Cars Parquet Dataset (modular)'
+2025-11-24 22:46:45 | layer1.flow | INFO | 🚀 Starting Layer1 Flow for date: 2025-11-24
+2025-11-24 22:46:46 | layer1.flow | INFO | [Task] Locating raw file for date: 2025-11-24
+2025-11-24 22:46:46 | layer1.file_locator | INFO | Locating raw file for date 2025-11-24: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:46 | layer1.file_locator | INFO | Found raw file: /home/tayyab/Polar_Pipeline/test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:46 | layer1.flow | INFO | [PERF] Locate Raw File completed in 0.02 sec
+2025-11-24 22:46:46 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:46:46 | layer1.flow | INFO | [Task] Reading raw CSV.GZ: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:46 | layer1.reader | INFO | Reading CSV.GZ with DuckDB streaming: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:46 | layer1.reader | INFO | DuckDB: Scanning CSV.GZ using read_csv_auto(...)
+2025-11-24 22:46:46 | layer1.reader | INFO | DuckDB: Starting batch streaming...
+2025-11-24 22:46:46 | layer1.reader | ERROR | DuckDB reader failed: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:46:46 | prefect.task_runs | INFO | Task run failed with exception: AttributeError("This relation does not contain a column by the name of 'offset'") - Retry 1/3 will start 5 second(s) from now
+2025-11-24 22:46:51 | layer1.flow | INFO | [Task] Reading raw CSV.GZ: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:51 | layer1.reader | INFO | Reading CSV.GZ with DuckDB streaming: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:51 | layer1.reader | INFO | DuckDB: Scanning CSV.GZ using read_csv_auto(...)
+2025-11-24 22:46:51 | layer1.reader | INFO | DuckDB: Starting batch streaming...
+2025-11-24 22:46:51 | layer1.reader | ERROR | DuckDB reader failed: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:46:51 | prefect.task_runs | INFO | Task run failed with exception: AttributeError("This relation does not contain a column by the name of 'offset'") - Retry 2/3 will start 5 second(s) from now
+2025-11-24 22:46:56 | layer1.flow | INFO | [Task] Reading raw CSV.GZ: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:56 | layer1.reader | INFO | Reading CSV.GZ with DuckDB streaming: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:46:56 | layer1.reader | INFO | DuckDB: Scanning CSV.GZ using read_csv_auto(...)
+2025-11-24 22:46:56 | layer1.reader | INFO | DuckDB: Starting batch streaming...
+2025-11-24 22:46:56 | layer1.reader | ERROR | DuckDB reader failed: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:46:56 | prefect.task_runs | INFO | Task run failed with exception: AttributeError("This relation does not contain a column by the name of 'offset'") - Retry 3/3 will start 5 second(s) from now
+2025-11-24 22:47:01 | layer1.flow | INFO | [Task] Reading raw CSV.GZ: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:47:01 | layer1.reader | INFO | Reading CSV.GZ with DuckDB streaming: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:47:01 | layer1.reader | INFO | DuckDB: Scanning CSV.GZ using read_csv_auto(...)
+2025-11-24 22:47:01 | layer1.reader | INFO | DuckDB: Starting batch streaming...
+2025-11-24 22:47:01 | layer1.reader | ERROR | DuckDB reader failed: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:47:01 | prefect.task_runs | ERROR | Task run failed with exception: AttributeError("This relation does not contain a column by the name of 'offset'") - Retries are exhausted
+Traceback (most recent call last):
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 884, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1538, in run_task_sync
+    engine.call_task_fn(txn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 901, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/flow.py", line 52, in task_read
+    df = read_raw_with_polars(raw_path)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/reader.py", line 43, in read_raw_with_polars
+    batch = rel.limit(batch_size).offset(offset).df()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:47:01 | prefect.task_runs | ERROR | Finished in state Failed("Task run encountered an exception AttributeError: This relation does not contain a column by the name of 'offset'")
+2025-11-24 22:47:01 | prefect.flow_runs | ERROR | Encountered exception during execution: AttributeError("This relation does not contain a column by the name of 'offset'")
+Traceback (most recent call last):
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 797, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 1425, in run_flow_sync
+    engine.call_flow_fn()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 817, in call_flow_fn
+    result = call_with_parameters(self.flow.fn, self.parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/flow.py", line 133, in layer1_flow
+    df = task_read(raw_path)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/tasks.py", line 1190, in __call__
+    return run_task(
+        task=self,
+    ...<2 lines>...
+        return_type=return_type,
+    )
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1765, in run_task
+    return run_task_sync(**kwargs)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1540, in run_task_sync
+    return engine.state if return_type == "state" else engine.result()
+                                                       ~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 499, in result
+    raise self._raised
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 884, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1538, in run_task_sync
+    engine.call_task_fn(txn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 901, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/flow.py", line 52, in task_read
+    df = read_raw_with_polars(raw_path)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/reader.py", line 43, in read_raw_with_polars
+    batch = rel.limit(batch_size).offset(offset).df()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:47:01 | prefect.flow_runs | INFO | Finished in state Failed("Flow run encountered an exception: AttributeError: This relation does not contain a column by the name of 'offset'")
+2025-11-24 22:47:01 | prefect.flow_runs | ERROR | Encountered exception during execution: AttributeError("This relation does not contain a column by the name of 'offset'")
+Traceback (most recent call last):
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 797, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 1425, in run_flow_sync
+    engine.call_flow_fn()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 817, in call_flow_fn
+    result = call_with_parameters(self.flow.fn, self.parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/flows/main_pipeline.py", line 31, in main_pipeline_flow
+    layer1_flow(processing_date)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flows.py", line 1708, in __call__
+    return run_flow(
+        flow=self,
+    ...<2 lines>...
+        return_type=return_type,
+    )
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 1582, in run_flow
+    ret_val = run_flow_sync(**kwargs)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 1427, in run_flow_sync
+    return engine.state if return_type == "state" else engine.result()
+                                                       ~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 363, in result
+    raise self._raised
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 797, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 1425, in run_flow_sync
+    engine.call_flow_fn()
+    ~~~~~~~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/flow_engine.py", line 817, in call_flow_fn
+    result = call_with_parameters(self.flow.fn, self.parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/flow.py", line 133, in layer1_flow
+    df = task_read(raw_path)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/tasks.py", line 1190, in __call__
+    return run_task(
+        task=self,
+    ...<2 lines>...
+        return_type=return_type,
+    )
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1765, in run_task
+    return run_task_sync(**kwargs)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1540, in run_task_sync
+    return engine.state if return_type == "state" else engine.result()
+                                                       ~~~~~~~~~~~~~^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 499, in result
+    raise self._raised
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 884, in run_context
+    yield self
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 1538, in run_task_sync
+    engine.call_task_fn(txn)
+    ~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/task_engine.py", line 901, in call_task_fn
+    result = call_with_parameters(self.task.fn, parameters)
+  File "/home/tayyab/Polar_Pipeline/.venv/lib/python3.13/site-packages/prefect/utilities/callables.py", line 210, in call_with_parameters
+    return fn(*args, **kwargs)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/flow.py", line 52, in task_read
+    df = read_raw_with_polars(raw_path)
+  File "/home/tayyab/Polar_Pipeline/layers/layer1/reader.py", line 43, in read_raw_with_polars
+    batch = rel.limit(batch_size).offset(offset).df()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: This relation does not contain a column by the name of 'offset'
+2025-11-24 22:47:01 | prefect.flow_runs | INFO | Finished in state Failed("Flow run encountered an exception: AttributeError: This relation does not contain a column by the name of 'offset'")
+2025-11-24 22:47:01 | prefect | INFO | Stopping temporary server on http://127.0.0.1:8116
+2025-11-24 22:52:42 | pipeline | INFO | Starting ETL pipeline CLI entrypoint
+2025-11-24 22:52:42 | pipeline | INFO | Received date argument: 20251124
+2025-11-24 22:52:42 | pipeline | INFO | Formatted execution date: 2025-11-24
+2025-11-24 22:52:42 | pipeline | INFO | Triggering main Prefect ETL pipeline flow
+2025-11-24 22:52:44 | prefect | INFO | Starting temporary server on http://127.0.0.1:8596
+See https://docs.prefect.io/v3/concepts/server#how-to-guides for more information on running a dedicated Prefect server.
+2025-11-24 22:52:49 | prefect.flow_runs | INFO | Beginning flow run 'fractal-coot' for flow 'Main ETL Pipeline'
+2025-11-24 22:52:49 | flows.main_pipeline | INFO | Main ETL Pipeline Started for date: 2025-11-24
+2025-11-24 22:52:49 | flows.main_pipeline | INFO | ▶ Running Layer 1 – NEW Cars Parquet Preparation
+2025-11-24 22:52:49 | prefect.flow_runs | INFO | Beginning subflow run 'nano-quail' for flow 'Layer 1 – Prepare NEW Cars Parquet Dataset (modular)'
+2025-11-24 22:52:49 | layer1.flow | INFO | 🚀 Starting Layer1 Flow for date: 2025-11-24
+2025-11-24 22:52:49 | layer1.flow | INFO | [Task] Locating raw file for date: 2025-11-24
+2025-11-24 22:52:49 | layer1.file_locator | INFO | Locating raw file for date 2025-11-24: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:52:49 | layer1.file_locator | INFO | Found raw file: /home/tayyab/Polar_Pipeline/test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:52:49 | layer1.flow | INFO | [PERF] Locate Raw File completed in 0.01 sec
+2025-11-24 22:52:49 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:49 | layer1.flow | INFO | [Task] Reading raw CSV.GZ: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:52:49 | layer1.reader | INFO | Reading CSV.GZ with DuckDB streaming: test_input/mc_us_new_combined_20251124.csv.gz
+2025-11-24 22:52:49 | layer1.reader | INFO | DuckDB: Initializing CSV scan using read_csv_auto(...)
+2025-11-24 22:52:49 | layer1.reader | INFO | DuckDB: Table created. Starting chunked streaming...
+2025-11-24 22:52:49 | layer1.reader | INFO | Chunk 1: 10 rows
+2025-11-24 22:52:49 | layer1.reader | INFO | DuckDB streaming completed: rows=10, cols=123
+2025-11-24 22:52:49 | layer1.flow | INFO | [PERF] Read CSV.GZ completed in 0.17 sec (rows=10, cols=123)
+2025-11-24 22:52:49 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | layer1.flow | INFO | [Task] Normalizing DataFrame to FULL_COLUMNS_NEW schema
+2025-11-24 22:52:50 | layer1.normalizer | INFO | Normalizing DataFrame (rows=10, cols=123) to schema (123 columns)
+2025-11-24 22:52:50 | layer1.normalizer | INFO | Normalization complete. Final shape: 10 rows × 123 columns
+2025-11-24 22:52:50 | layer1.flow | INFO | [PERF] Normalize Schema completed in 0.03 sec (rows=10)
+2025-11-24 22:52:50 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | layer1.flow | INFO | [Task] Writing parquet parts for 2025-11-24
+2025-11-24 22:52:50 | layer1.writer | INFO | Writing parquet parts for 2025-11-24 → 10 rows, chunk_size=1,000,000, compression=snappy
+2025-11-24 22:52:50 | layer1.writer | INFO | Total chunks to write: 1
+2025-11-24 22:52:50 | layer1.writer | INFO | Wrote chunk 1/1 → part-00000.parquet (10 rows)
+2025-11-24 22:52:50 | layer1.writer | INFO | All parquet parts written successfully → data/layer1_output/new/2025-11-24
+2025-11-24 22:52:50 | layer1.flow | INFO | [PERF] Write Parquet Parts completed in 0.01 sec
+2025-11-24 22:52:50 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | layer1.flow | INFO | [Task] Validating output schema in: data/layer1_output/new/2025-11-24
+2025-11-24 22:52:50 | layer1.validator | INFO | [Validator] Validating Layer1 output folder: data/layer1_output/new/2025-11-24
+2025-11-24 22:52:50 | layer1.validator | INFO | [Validator] Inspecting schema from: part-00000.parquet
+2025-11-24 22:52:50 | layer1.validator | INFO | [Validator] Schema validation PASSED → 123 columns
+2025-11-24 22:52:50 | layer1.flow | INFO | [PERF] Schema validation completed in 0.01 sec
+2025-11-24 22:52:50 | prefect.task_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | layer1.flow | INFO | ⏱️ [Layer1 TOTAL] Completed in 0.65 sec
+2025-11-24 22:52:50 | layer1.flow | INFO | ✅ Layer1 Flow Completed Successfully → Output: data/layer1_output/new/2025-11-24
+2025-11-24 22:52:50 | prefect.flow_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | flows.main_pipeline | INFO | ✔ Layer 1 completed successfully
+2025-11-24 22:52:50 | flows.main_pipeline | INFO | ✅ Main ETL Pipeline completed (Layer 1 only for now)
+2025-11-24 22:52:50 | prefect.flow_runs | INFO | Finished in state Completed()
+2025-11-24 22:52:50 | pipeline | INFO | ETL pipeline CLI execution completed successfully
+2025-11-24 22:52:50 | prefect | INFO | Stopping temporary server on http://127.0.0.1:8596

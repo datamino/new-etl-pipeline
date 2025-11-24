@@ -1,167 +1,67 @@
 # layers/layer1/reader.py
 # ---------------------------------------------------------
-# Layer 1 – Step 2: Read raw CSV.GZ using Polars, safely.
-# Windows-friendly, memory-safe, compatible with all Polars
-# versions (0.17 → 1.0+).
-#
-# Strategy:
-#   1) Decompress to a temp CSV file (1MB chunks)
-#   2) Read CSV in 200,000-row batches via batched reader
-#   3) Final fallback: direct read_csv()
-#
-# Logging: Centralized logger ("layer1.reader")
+# Layer 1 – DuckDB Streaming Reader (Correct / No .offset bug)
 # ---------------------------------------------------------
 
 from pathlib import Path
+import duckdb
 import polars as pl
-import gzip
-import tempfile
-import os
 from util.logger import get_logger
 
 logger = get_logger("layer1.reader")
 
-# GLOBAL SAFE BATCH SIZE (Option B)
-SAFE_BATCH_SIZE = 200_000
 
-
-def _read_csv_in_batches(csv_path: str, batch_size: int):
+def read_raw_with_polars(raw_path: Path, batch_size: int = 200_000):
     """
-    Internal helper to read CSV using Polars BatchedCsvReader.
-    This works on ALL Polars versions (new & old).
-    """
-
-    logger.info(f"Reading CSV in batches of {batch_size:,} rows...")
-
-    reader = pl.read_csv_batched(
-        csv_path,
-        batch_size=batch_size,
-        has_header=True,
-        ignore_errors=True,
-    )
-
-    batches = []
-    batch_index = 0
-    total_rows = 0
-
-    while True:
-        batch_list = reader.next_batches(1)  # returns [] or [DataFrame]
-
-        if not batch_list:
-            break
-
-        batch = batch_list[0]
-        batch_index += 1
-        total_rows += batch.height
-
-        logger.debug(f"  Batch {batch_index}: {batch.height:,} rows")
-        batches.append(batch)
-
-    logger.info(f"Batch reading finished → {batch_index} batches, {total_rows:,} rows")
-
-    if not batches:
-        raise RuntimeError("No data batches returned from CSV reader")
-
-    return pl.concat(batches, how="vertical")
-
-
-def read_raw_with_polars(raw_path: Path, infer_rows: int = 50_000) -> pl.DataFrame:
-    """
-    Safest cross-platform CSV.GZ reader for Windows/Linux.
-
-    Steps:
-        1) Decompress to temp CSV (chunked)
-        2) Read CSV using batched reader (200k chunks)
-        3) Fallback to direct read_csv()
-
-    Returns:
-        Polars DataFrame
+    Stream CSV.GZ using DuckDB + fetch_df_chunk()
+    This is the safest, most memory-stable approach for Windows Server.
     """
 
     raw_path = Path(raw_path)
-    logger.info(f"Reading raw CSV.GZ with Polars: {raw_path}")
-    logger.info(f"Compressed size = {raw_path.stat().st_size / (1024**2):.2f} MB")
+    logger.info(f"Reading CSV.GZ with DuckDB streaming: {raw_path}")
 
-    temp_csv = None
-
-    # ---------------------------------------------------------
-    # TRY 1 — Decompress CSV.GZ → temporary CSV file (chunked)
-    # ---------------------------------------------------------
     try:
-        logger.info("Attempt 1: Decompressing to temp file (1MB chunks)...")
+        con = duckdb.connect()
 
-        with tempfile.NamedTemporaryFile(mode="w+b", suffix=".csv", delete=False) as tmp:
-            temp_csv = tmp.name
-            logger.info(f"→ Temp file: {temp_csv}")
+        logger.info("DuckDB: Initializing CSV scan using read_csv_auto(...)")
 
-            with gzip.open(str(raw_path), "rb") as gz:
-                chunk_size = 1024 * 1024  # 1MB
-                while True:
-                    chunk = gz.read(chunk_size)
-                    if not chunk:
-                        break
-                    tmp.write(chunk)
+        # Create a DuckDB relation (lazy scan)
+        con.execute(f"""
+            CREATE TABLE tmp_scan AS 
+            SELECT * FROM read_csv_auto('{raw_path}', 
+                header=True,
+                ignore_errors=True
+            );
+        """)
+
+        logger.info("DuckDB: Table created. Starting chunked streaming...")
+
+        con.execute("SELECT * FROM tmp_scan")
+
+        df_batches = []
+        chunk_idx = 0
+
+        while True:
+            chunk = con.fetch_df_chunk(batch_size)
+            if chunk is None or chunk.empty:
+                break
+
+            chunk_idx += 1
+            pl_chunk = pl.from_pandas(chunk)
+            df_batches.append(pl_chunk)
+
+            logger.info(f"Chunk {chunk_idx}: {pl_chunk.height} rows")
+
+        if not df_batches:
+            raise RuntimeError("DuckDB returned zero chunks. CSV empty?")
+
+        df = pl.concat(df_batches, how="vertical_relaxed")
 
         logger.info(
-            f"Decompressed CSV size = {Path(temp_csv).stat().st_size / (1024**2):.2f} MB"
-        )
-
-        # Read CSV in batches (200k rows)
-        df = _read_csv_in_batches(temp_csv, SAFE_BATCH_SIZE)
-        logger.info(
-            f"Temp decompress SUCCESS → rows={df.height:,}, cols={len(df.columns)}"
-        )
-
-        return df
-
-    except Exception as e:
-        logger.warning(
-            f"Temp decompress/batch-read failed → {str(e)[:150]}. Trying direct batch read..."
-        )
-    finally:
-        if temp_csv and os.path.exists(temp_csv):
-            try:
-                os.remove(temp_csv)
-                logger.debug(f"Removed temp file: {temp_csv}")
-            except Exception as cleanup_err:
-                logger.warning(f"Could not delete temp file: {cleanup_err}")
-
-    # ---------------------------------------------------------
-    # TRY 2 — Direct batched read WITHOUT decompressing first
-    # ---------------------------------------------------------
-    try:
-        logger.info("Attempt 2: Direct batched read_csv_batched()...")
-        df = _read_csv_in_batches(str(raw_path), SAFE_BATCH_SIZE)
-        logger.info(
-            f"Direct batched read SUCCESS → rows={df.height:,}, cols={len(df.columns)}"
+            f"DuckDB streaming completed: rows={df.height}, cols={len(df.columns)}"
         )
         return df
 
     except Exception as e:
-        logger.warning(
-            f"Direct batched read failed → {str(e)[:150]}. Trying standard read_csv..."
-        )
-
-    # ---------------------------------------------------------
-    # TRY 3 — Last fallback: Standard read_csv()
-    # ---------------------------------------------------------
-    try:
-        logger.info("Attempt 3: Standard read_csv() (slow but reliable)...")
-
-        df_fallback = pl.read_csv(
-            str(raw_path),
-            ignore_errors=True,
-            low_memory=True,
-        )
-
-        if not isinstance(df_fallback, pl.DataFrame):
-            raise TypeError(f"read_csv returned: {type(df_fallback)}")
-
-        logger.info(
-            f"Standard read SUCCESS → rows={df_fallback.height:,}, cols={len(df_fallback.columns)}"
-        )
-        return df_fallback
-
-    except Exception as fatal:
-        logger.error(f"❌ All read attempts FAILED → {str(fatal)[:200]}")
-        raise RuntimeError(f"Unable to read CSV.GZ file: {raw_path}") from fatal
+        logger.error(f"DuckDB streaming failed: {e}")
+        raise
